@@ -1,0 +1,12 @@
+I want to implement a simple scripting language for this. to make dumps easier 
+
+r # // reads # bytes
+ph # // prints n bytes in hex
+ph # # // prints n bytes in groups of # lenght
+pa # // prints at # in raw ascii
+pa # # // prints at # in raw ascii, till #
+
+write s // writes s to the screen
+writel s // writes s to screen with newline
+
+
