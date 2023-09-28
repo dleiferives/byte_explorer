@@ -2,7 +2,7 @@ I want to implement a simple scripting language for this. to make dumps easier
 // first letter of each command must be unique.
 
 f s // sets the file to s
-o s // opens the file 
+o // opens the file 
 r # // reads # bytes
 ph # // prints n bytes in hex from cursor
 phl # # // prints n bytes in groups of # lenght from cursor

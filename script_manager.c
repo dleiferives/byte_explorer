@@ -136,9 +136,25 @@ void parse_command(char * str, int len, ByteFile * bf)
 			case 'w':
 				cursor++;
 				cursor++;
-				while((str[cursor] != '\n') || (str[cursor] != '\0'))
+				while((str[cursor] != '\n') && (str[cursor] != '\0'))
 				{
 					putchar(str[cursor++]);
+				}
+				return;
+				break;
+			case 'r':
+				cursor++;
+				cursor++;
+				int num_read= string_to_int(&str[cursor]);
+				for(int i =0; i< num_read; i++)
+				{
+					int temp = getc(bf->fp);
+					if (temp == EOF) {
+						printf("end of file reached, no more reading possible.\n"); 
+						return;
+					}
+					U8_List_append(&(bf->buffer),temp);
+					bf->read_cursor+=1;
 				}
 				return;
 				break;
@@ -167,7 +183,18 @@ ByteFile parse_file(FILE * fp)
 
 	// parse that line
 	parse_command(&lines.arr[lines.cursor], lines.num_items - lines.cursor, &bf);
-	
+	lines.cursor = lines.num_items;
+	while(1)
+	{
+		do{
+			int result = getc(fp);
+			if (result == EOF) return bf;
+			U8_List_append(&lines,result);
+		}while(lines.arr[lines.num_items-1] != '\n');
+		parse_command(&lines.arr[lines.cursor], lines.num_items - lines.cursor, &bf);
+		lines.cursor = lines.num_items;
+	}
+
 
 	//TODO testing
 	//TODO implement more than one line

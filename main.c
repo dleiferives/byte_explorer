@@ -24,7 +24,7 @@ int string_to_int(char * s)
 		mult = 16;
 		s = &s[2];
 	}
-	for (int i =0; (s[i] != '\0') || (s[i] != ' '); i++)
+	for (int i =0; (s[i] != '\0') && (s[i] != ' '); i++)
 	{
 		result *= mult;
 		result += hex_char_int(s[i]);
@@ -65,7 +65,8 @@ void print_ascii(int start, int end)
 int main()
 {
 	FILE *fp = fopen("test1.bfp","r");
-	parse_file(fp);
+	ByteFile bf = parse_file(fp);
+	printf("file name:%s\n",bf.file_name);
 }
 
 /*
