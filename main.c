@@ -24,7 +24,7 @@ int string_to_int(char * s)
 		mult = 16;
 		s = &s[2];
 	}
-	for (int i =0; (s[i] != '\0') && (s[i] != ' '); i++)
+	for (int i =0; (s[i] != '\0') && (s[i] != ' ') && (s[i] != '\n'); i++)
 	{
 		result *= mult;
 		result += hex_char_int(s[i]);

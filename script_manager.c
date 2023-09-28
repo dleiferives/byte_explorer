@@ -32,6 +32,20 @@ U8_List U8_List_init(int size)
 	return result;
 }
 
+ByteFile ByteFile_zero(void)
+{
+	ByteFile result;
+	result.buffer = U8_List_init(256);
+	result.buffer_size =0;
+	result.buffer_cursor =0;
+	result.read_cursor =0;
+	result.fp = NULL;
+	for(int i=0; i < 256; i++) result.file_name[i] =0;
+	result.file_start_pointer = NULL;
+	result.word_with =0;
+	result.num_words =0;
+	return result;
+}
 void U8_List_append(U8_List *list, unsigned char value)
 {
 	if(list->num_items == (list->size -1))
@@ -125,12 +139,12 @@ void parse_command(char * str, int len, ByteFile * bf)
 			case 'c':
 				cursor++;
 				int pos = string_to_int(&str[++cursor]);
-				bf->buffer_cursor = pos;
-				if (bf->buffer_cursor > bf->read_cursor)
+				if (pos > bf->read_cursor)
 				{
-					printf("cursor going beyond read scope. will exit\n");
-					exit(1);
+					printf("cursor going beyond read scope. stop here\n");
+					return;
 				}
+				bf->buffer_cursor = pos;
 				return;
 				break;
 			case 'w':
@@ -172,8 +186,7 @@ ByteFile parse_file(FILE * fp)
 {
 	// split into lines?
 	// yes
-	ByteFile bf;	
-	bf.buffer = U8_List_init(256);
+	ByteFile bf= ByteFile_zero();;	
 	U8_List lines = U8_List_init(256);
 		
 	// get first line
