@@ -66,7 +66,12 @@ int main()
 {
 	FILE *fp = fopen("test1.bfp","r");
 	ByteFile bf = parse_file(fp);
-	printf("file name:%s\n",bf.file_name);
+	printf("\nfile name:%s\n",bf.file_name);
+	printf("starting user input cli to exit press `: \n");
+	while(1)
+	{
+		parse_input(&bf);
+	}
 }
 
 /*

@@ -180,6 +180,21 @@ void parse_command(char * str, int len, ByteFile * bf)
 }
 
 
+void parse_input(ByteFile *bf)
+{
+	putchar(10);
+	U8_List input = U8_List_init(512);
+	char c ='c';
+	do
+	{
+		 c = getchar();
+		U8_List_append(&input,c);
+		if(c == '`') exit(0);
+	}while(c != '\n');
+
+	parse_command(&input.arr[input.cursor], input.num_items - input.cursor, bf);
+	return;
+}
 
 
 ByteFile parse_file(FILE * fp)
