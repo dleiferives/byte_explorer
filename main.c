@@ -24,7 +24,7 @@ int string_to_int(char * s)
 		mult = 16;
 		s = &s[2];
 	}
-	for (int i =0; s[i] != '\0'; i++)
+	for (int i =0; (s[i] != '\0') || (s[i] != ' '); i++)
 	{
 		result *= mult;
 		result += hex_char_int(s[i]);
@@ -60,6 +60,15 @@ void print_ascii(int start, int end)
 	}
 }
 
+#include "script_manager.c"
+
+int main()
+{
+	FILE *fp = fopen("test1.bfp","r");
+	parse_file(fp);
+}
+
+/*
 int main(int argc, char *argv[])
 {
 	FILE *fp;
@@ -103,3 +112,4 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+*/

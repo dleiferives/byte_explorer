@@ -1,12 +1,14 @@
 I want to implement a simple scripting language for this. to make dumps easier 
+// first letter of each command must be unique.
 
+f s // sets the file to s
+o s // opens the file 
 r # // reads # bytes
-ph # // prints n bytes in hex
-ph # # // prints n bytes in groups of # lenght
-pa # // prints at # in raw ascii
-pa # # // prints at # in raw ascii, till #
+ph # // prints n bytes in hex from cursor
+phl # # // prints n bytes in groups of # lenght from cursor
+pa // prints at cursor in raw ascii
+c # //sets the cursor to #
 
-write s // writes s to the screen
-writel s // writes s to screen with newline
+w s // writes s to the screen till newline or '\0'
 
 
