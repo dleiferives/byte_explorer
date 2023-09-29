@@ -6,6 +6,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
+   - [Example](#example)
 - [Features](#features)
 - [Scripting Language](#scripting-language)
 - [Contributing](#contributing)
