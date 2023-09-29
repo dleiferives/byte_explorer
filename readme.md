@@ -1,6 +1,6 @@
 # ByteExplorer
 
-**ByteExplorer** ByteExplorer is a small **linux only** cli tool that I banged together over a weekend. It has a small text user interface (using my library [tui.h](https://github.com/dleiferives/tui).
+**ByteExplorer** ByteExplorer is a small **linux only** cli tool that I banged together over a weekend. It has a small text user interface (using my library [tui.h](https://github.com/dleiferives/tui)).
 
 ## Table of Contents
 
