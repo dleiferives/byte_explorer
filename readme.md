@@ -46,7 +46,7 @@ To get started, run ByteExplorer with a binary file as an argument:
 
 The ByteExplorer tui will appear, allowing you to enter commands and perform actions on the binary file
 
-# Example
+### Example
 If you have a file "data_dump"
 You would run ByteExplorer
 ```bash
@@ -63,7 +63,7 @@ phl 512 16
 
 That would display the first 512 bytes of the file. If the file is shorter than 512 bytes, it will print 0s.
 
-# Visual Example
+### Visual Example
 
 ![ByteExplorer Demo](https://raw.githubusercontent.com/dleiferives/byte_explorer/master/output.gif)
 ## Features
