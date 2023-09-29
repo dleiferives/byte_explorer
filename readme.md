@@ -93,8 +93,4 @@ You can create custom scripts by combining these commands to perform various ope
 
 Contributions to ByteExplorer are welcome! If you have suggestions, bug reports, or would like to contribute code or features, please feel free to open an issue or create a pull request. Your input is valuable in improving this tool.
 
-## License
-
-ByteExplorer is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
 **Happy exploring!**
