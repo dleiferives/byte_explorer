@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 int hex_char_int(char c) {
     if (c >= '0' && c <= '9') {
         return c - '0';  // Convert '0' to 0, '1' to 1, and so on
@@ -62,15 +63,29 @@ void print_ascii(int start, int end)
 
 #include "script_manager.c"
 
-int main()
+int main(int argc, char *argv[])
 {
-	FILE *fp = fopen("test1.bfp","r");
-	ByteFile bf = parse_file(fp);
-	printf("\nfile name:%s\n",bf.file_name);
-	printf("starting user input cli to exit press `: \n");
+	// set up the terminal
+	Terminal_t term;
+	term = Terminal_t_init();
+	Terminal_t_create(&term);
+	Terminal_t_move_cursor(&term,0,0);
+	
+	ByteFile bf = ByteFile_zero();
+	if(argc == 2) {
+		printf("Setting your file to %s\n",argv[1]);
+		int i=0;
+		for(; argv[i] != 0; i++)
+		{
+			bf.file_name[i] = argv[1][i];
+		}
+		bf.file_name[i+1] =0;
+	}
+
+	printf("starting user input cli start typing");
 	while(1)
 	{
-		parse_input(&bf);
+		Terminal_t_parse_input(&term,&bf);
 	}
 }
 

@@ -1,10 +1,11 @@
+#include "../tui/tui.h"
 typedef struct
 {
 	int size;
 	int num_items;
 	int cursor;
 	unsigned char * arr;
-} U8_List;
+}U8_List;
 typedef struct
 {
 	U8_List buffer;
@@ -16,7 +17,7 @@ typedef struct
 	FILE * file_start_pointer;
 	int word_with;
 	int num_words;
-} ByteFile;
+}ByteFile;
 
 U8_List U8_List_init(int size)
 {
@@ -74,17 +75,16 @@ void ByteFile_print_hex(ByteFile * bf, int n_bytes, int width)
 	int counter = 0;
 	while(counter < n_bytes)
 	{
-		if((counter++ % width) == 0) putchar(10);
 		print_hex(bf->buffer.arr[bf->buffer_cursor++]);
 		putchar(' ');
+		if((++counter % width) == 0) putchar(10);
 	}
 }
 
 
-void parse_command(char * str, int len, ByteFile * bf)
+void ByteFile_parse_command(Terminal_t *t, char * str, int len, ByteFile * bf)
 {
 	int cursor =0;
-	
 	while(cursor < len)
 	{
 		switch(str[cursor])
@@ -136,6 +136,7 @@ void parse_command(char * str, int len, ByteFile * bf)
 					}
 					return;
 				}
+				return;
 			case 'c':
 				cursor++;
 				int pos = string_to_int(&str[++cursor]);
@@ -172,6 +173,9 @@ void parse_command(char * str, int len, ByteFile * bf)
 				}
 				return;
 				break;
+			case 'x':
+				Terminal_t_destroy(NULL);
+				exit(0);
 			default:
 				cursor++;
 		}
@@ -180,51 +184,61 @@ void parse_command(char * str, int len, ByteFile * bf)
 }
 
 
-void parse_input(ByteFile *bf)
+int Terminal_t_parse_input(Terminal_t *t, ByteFile *bf)
 {
-	putchar(10);
 	U8_List input = U8_List_init(512);
 	char c ='c';
-	do
+	Terminal_t_move_cursor(t,0,0);
+	Terminal_t_clear_to_l_end(t);
+	Terminal_t_move_cursor(t,0,1);
+	for(int i =0; i<t->width; i++)
+		putchar('#');
+	Terminal_t_move_cursor(t,0,0);
+	c = getchar();
+	U8_List_append(&input,c);
+	// it would be cleaner in a do while, howerver, need the timing to clear the line
+	
+	while(c != '\n')
 	{
-		 c = getchar();
+		c = getchar();
 		U8_List_append(&input,c);
-		if(c == '`') exit(0);
-	}while(c != '\n');
+	}
 
-	parse_command(&input.arr[input.cursor], input.num_items - input.cursor, bf);
-	return;
+	Terminal_t_move_cursor(t,0,2);
+	Terminal_t_clear_to_l_end(t);
+	Terminal_t_move_cursor(t,0,2);
+	ByteFile_parse_command(t,&input.arr[input.cursor], input.num_items - input.cursor, bf);
+	return 1;
 }
 
 
-ByteFile parse_file(FILE * fp)
+ByteFile ByteFile_parse_file(FILE * fp)
 {
-	// split into lines?
-	// yes
-	ByteFile bf= ByteFile_zero();;	
-	U8_List lines = U8_List_init(256);
+	ByteFile bf= ByteFile_zero();
+
+	U8_List flines = U8_List_init(256);
 		
 	// get first line
 	do{
-		U8_List_append(&lines,getc(fp));
-	}while(lines.arr[lines.num_items-1] != '\n');
+		U8_List_append(&flines,getc(fp));
+	}while(flines.arr[flines.num_items-1] != '\n');
 
 	// parse that line
-	parse_command(&lines.arr[lines.cursor], lines.num_items - lines.cursor, &bf);
-	lines.cursor = lines.num_items;
+	// TODO FIX NULLS
+	ByteFile_parse_command(NULL,&flines.arr[flines.cursor], flines.num_items - flines.cursor, &bf);
+	flines.cursor = flines.num_items;
 	while(1)
 	{
 		do{
 			int result = getc(fp);
 			if (result == EOF) return bf;
-			U8_List_append(&lines,result);
-		}while(lines.arr[lines.num_items-1] != '\n');
-		parse_command(&lines.arr[lines.cursor], lines.num_items - lines.cursor, &bf);
-		lines.cursor = lines.num_items;
+			U8_List_append(&flines,result);
+		}while(flines.arr[flines.num_items-1] != '\n');
+		ByteFile_parse_command(NULL,&flines.arr[flines.cursor], flines.num_items - flines.cursor, &bf);
+		flines.cursor = flines.num_items;
 	}
 
 
 	//TODO testing
-	//TODO implement more than one line
 	return bf;
 }
