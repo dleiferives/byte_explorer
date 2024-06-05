@@ -1,23 +1,4 @@
-#include "../tui/tui.h"
-typedef struct
-{
-	int size;
-	int num_items;
-	int cursor;
-	unsigned char * arr;
-}U8_List;
-typedef struct
-{
-	U8_List buffer;
-	int buffer_size;
-	int buffer_cursor;
-	int read_cursor;
-	FILE * fp;
-	char file_name[256];
-	FILE * file_start_pointer;
-	int word_with;
-	int num_words;
-}ByteFile;
+#include "script_manager.h"
 
 U8_List U8_List_init(int size)
 {
@@ -108,8 +89,7 @@ void ByteFile_parse_command(Terminal_t *t, char * str, int len, ByteFile * bf)
 					exit(1);
 				}
 				return;
-				break;
-			case 'p':
+			case 'p':;
 				int arg1 = 0;
 				int arg2 = 0;
 				if(str[++cursor] == 'h')
@@ -242,3 +222,69 @@ ByteFile ByteFile_parse_file(FILE * fp)
 	//TODO testing
 	return bf;
 }
+
+
+
+
+
+int hex_char_int(char c) {
+    if (c >= '0' && c <= '9') {
+        return c - '0';  // Convert '0' to 0, '1' to 1, and so on
+    } else if (c >= 'a' && c <= 'f') {
+        return c - 'a' + 10;  // Convert 'a' to 10, 'b' to 11, and so on
+    } else if (c >= 'A' && c <= 'F') {
+        return c - 'A' + 10;  // Convert 'A' to 10, 'B' to 11, and so on
+    } else {
+        // Invalid input character
+        // You can handle this case as needed, e.g., return an error code
+        return -1;  // Indicates an error
+    }
+}
+int string_to_int(char * s)
+{
+	long result =0;
+	char c = s[0];
+	if(c == 0) return 0;
+	int mult = 10;
+	if(s[0] == '0' && s[1] == 'x')
+	{
+		mult = 16;
+		s = &s[2];
+	}
+	for (int i =0; (s[i] != '\0') && (s[i] != ' ') && (s[i] != '\n'); i++)
+	{
+		result *= mult;
+		result += hex_char_int(s[i]);
+	}
+	return result;
+}
+void print_hex(unsigned char c)
+{
+	char s = c & 0x0F;
+	char f = (c & 0xF0) >> 4;
+	char mod = (s > 9) ? 'A'-10 : '0';
+	char mod2 = (f > 9) ? 'A'-10 : '0';
+
+	putchar(f+mod2);
+	putchar(s+mod);
+
+	return;
+}
+
+unsigned char buffer[512];
+int buf_it = 0;
+
+unsigned char getc_store(FILE *fp)
+{
+	buffer[buf_it++] = getc(fp);
+	return buffer[buf_it];
+}	
+
+void print_ascii(int start, int end)
+{
+	for(int i =start; i <end; i++)
+	{
+		putchar(buffer[i]);
+	}
+}
+

@@ -25,7 +25,7 @@ ByteExplorer is easy to set up and run. Follow these steps to get started:
 2. Compile the code, ensuring that you have the necessary dependencies, including `terminfo` and possibly 'ncurses':
 
    ```bash
-   gcc -o byteexplorer main.c script_manager.c -ltinfo
+   gcc -o byteexplorer main.c tui.c script_manager.c -ltinfo -lncurses
    ```
 
 3. Run ByteExplorer:
